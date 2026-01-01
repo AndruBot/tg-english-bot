@@ -1,0 +1,75 @@
+{
+  "questions": [
+    {
+      "text": "Alice Hello, how are you?\nBob ______.",
+      "text_html": "<b>Question 1</b>\n\nAlice Hello, how are you?\nBob ______.",
+      "answer_1": "I'm doing well, thank you",
+      "answer_1_html": "1. I'm doing well, thank you",
+      "answer_2": "My name is Bob",
+      "answer_2_html": "2. My name is Bob",
+      "answer_3": "Nice to meet you",
+      "answer_3_html": "3. Nice to meet you",
+      "answer_4": "",
+      "answer_4_html": "",
+      "correct_answer_id": 1,
+      "score": 1
+    },
+    {
+      "text": "What color is the sky?\nThe sky is ______.",
+      "text_html": "<b>Question 2</b>\n\nWhat color is the sky?\nThe sky is ______.",
+      "answer_1": "blue",
+      "answer_1_html": "1. blue",
+      "answer_2": "green",
+      "answer_2_html": "2. green",
+      "answer_3": "red",
+      "answer_3_html": "3. red",
+      "answer_4": "",
+      "answer_4_html": "",
+      "correct_answer_id": 1,
+      "score": 1
+    },
+    {
+      "text": "I like coffee ______ tea in the morning.",
+      "text_html": "<b>Question 3</b>\n\nI like coffee ______ tea in the morning.",
+      "answer_1": "and",
+      "answer_1_html": "1. and",
+      "answer_2": "or",
+      "answer_2_html": "2. or",
+      "answer_3": "but",
+      "answer_3_html": "3. but",
+      "answer_4": "",
+      "answer_4_html": "",
+      "correct_answer_id": 1,
+      "score": 1
+    },
+    {
+      "text": "What time do you usually wake up?",
+      "text_html": "<b>Question 4</b>\n\nWhat time do you usually wake up?",
+      "answer_1": "At 7 o'clock",
+      "answer_1_html": "1. At 7 o'clock",
+      "answer_2": "In the morning",
+      "answer_2_html": "2. In the morning",
+      "answer_3": "Every day",
+      "answer_3_html": "3. Every day",
+      "answer_4": "",
+      "answer_4_html": "",
+      "correct_answer_id": 1,
+      "score": 1
+    },
+    {
+      "text": "My friend ______ to the library every weekend.",
+      "text_html": "<b>Question 5</b>\n\nMy friend ______ to the library every weekend.",
+      "answer_1": "go",
+      "answer_1_html": "1. go",
+      "answer_2": "goes",
+      "answer_2_html": "2. goes",
+      "answer_3": "going",
+      "answer_3_html": "3. going",
+      "answer_4": "is go",
+      "answer_4_html": "4. is go",
+      "correct_answer_id": 2,
+      "score": 1
+    }
+  ]
+}
+
