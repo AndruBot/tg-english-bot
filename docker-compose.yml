@@ -1,0 +1,60 @@
+version: '3.3'
+
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: tg-english-bot-mongodb
+    restart: unless-stopped
+    env_file:
+      - .env.prod
+    ports:
+      - "${MONGODB_PORT:-27017}:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME:-admin}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:-password}
+      MONGO_INITDB_DATABASE: ${MONGO_DATABASE:-english_test_bot}
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_config:/data/configdb
+    networks:
+      - app_network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+
+  app:
+    image: ${DOCKER_IMAGE_NAME:-tg-english-bot-app}
+    container_name: tg-english-bot-app
+    restart: unless-stopped
+    env_file:
+      - .env.prod
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    volumes:
+      # Mount questions.json file
+      - ./questions.json:/root/questions.json:ro
+      # Mount .env.prod file so the app can load it
+      - ./.env.prod:/root/.env.prod:ro
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD", "pgrep", "-f", "tg-english-bot"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  mongodb_data:
+    driver: local
+  mongodb_config:
+    driver: local
+
+networks:
+  app_network:
+    driver: bridge
+

@@ -20,6 +20,8 @@ go.work
 
 # Environment variables
 .env
+.env.prod
+.env.dev
 
 # Results CSV (contains user data)
 results.csv
@@ -44,4 +46,18 @@ answers_text.txt
 # OS
 .DS_Store
 Thumbs.db
+
+# Generate questions binary
+generate-questions
+cmd/generate-questions/generate-questions
+
+# Nginx configuration
+nginx*.conf
+*nginx*.conf
+default
+deploy.sh
+
+# HAProxy configuration
+haproxy*.cfg
+*haproxy*.cfg
 

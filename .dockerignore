@@ -1,0 +1,52 @@
+# Git
+.git
+.gitignore
+
+# Documentation
+README.md
+*.md
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Question files (will be mounted as volume)
+questions.json
+questions.csv
+questions_test.csv
+questions_text.txt
+answers_text.txt
+
+# PDF files
+*.pdf
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+*.exe
+*.test
+*.out
+tg-english-bot
+
+# Docker
+docker-compose*.yml
+Dockerfile
+.dockerignore
+
+# Results
+results.csv
+
+# Python
+__pycache__/
+*.pyc
+generate_questions.py
+

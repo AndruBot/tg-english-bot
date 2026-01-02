@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"strings"
 )
 
 // GetMaxConsecutiveErrors returns the maximum allowed consecutive errors before test failure
@@ -100,4 +101,20 @@ func GetMongoDatabase() string {
 		return "english_test_bot"
 	}
 	return database
+}
+
+// GetEnvFile returns the environment file path based on the ENV variable
+// Returns ".env.prod" for production, ".env.dev" for development, or ".env" as default
+func GetEnvFile() string {
+	env := strings.ToLower(os.Getenv("ENV"))
+
+	switch env {
+	case "production", "prod":
+		return ".env.prod"
+	case "development", "dev", "develop":
+		return ".env.dev"
+	default:
+		// Default to .env for backward compatibility
+		return ".env"
+	}
 }

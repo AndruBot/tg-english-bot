@@ -12,10 +12,13 @@ import (
 )
 
 func main() {
-	// Load environment variables from .env file
-	err := godotenv.Load()
+	// Load environment variables from the appropriate file based on ENV variable
+	envFile := config.GetEnvFile()
+	log.Printf("Loading environment from %s", envFile)
+
+	err := godotenv.Load(envFile)
 	if err != nil {
-		log.Printf("Warning: Error loading .env file: %v (using system environment variables)", err)
+		log.Printf("Warning: Error loading %s file: %v (using system environment variables)", envFile, err)
 	}
 
 	// Get bot token from config

@@ -78,10 +78,32 @@ go mod download
 ```
 
 3. Set up environment variables:
-```bash
-cp .env.example .env
-# Edit .env and add your TELEGRAM_BOT_TOKEN
-```
+
+   **For Development:**
+   ```bash
+   cp env.dev.example .env.dev
+   # Edit .env.dev and add your TELEGRAM_BOT_TOKEN
+   export ENV=dev  # or development/develop
+   ```
+
+   **For Production:**
+   ```bash
+   cp env.prod.example .env.prod
+   # Edit .env.prod and add your TELEGRAM_BOT_TOKEN
+   export ENV=prod  # or production
+   ```
+
+   **Default (backward compatible):**
+   ```bash
+   cp .env.example .env
+   # Edit .env and add your TELEGRAM_BOT_TOKEN
+   # No ENV variable needed, will use .env by default
+   ```
+
+   The application automatically selects the environment file based on the `ENV` variable:
+   - `ENV=production` or `ENV=prod` → loads `.env.prod`
+   - `ENV=development` or `ENV=dev` or `ENV=develop` → loads `.env.dev`
+   - No `ENV` variable or other value → loads `.env` (default)
 
 4. Start MongoDB using Docker Compose:
 ```bash
@@ -95,12 +117,92 @@ mongod
 5. Prepare your questions JSON file:
    - The file should be named `questions.json`
    - See "Questions" section below for format details
-   - Or run `python3 generate_questions.py` to generate from `questions_text.txt`
+   - Or run `go run cmd/generate-questions/main.go` to generate from `questions_text.txt`
 
 6. Run the bot:
 ```bash
 go run main.go
 ```
+
+### Docker Deployment (Production)
+
+For production deployment using Docker Compose:
+
+1. **Create production environment file**:
+   ```bash
+   cp env.prod.example .env.prod
+   # Edit .env.prod and fill in your configuration (TELEGRAM_BOT_TOKEN, passwords, etc.)
+   ```
+
+2. **Set environment mode (optional, defaults to production)**:
+   ```bash
+   export ENV=production  # or prod
+   # Or add ENV=production to .env.prod file
+   ```
+
+3. **Build and start services**:
+   ```bash
+   docker-compose up -d
+   ```
+
+4. **View logs**:
+   ```bash
+   docker-compose logs -f app
+   ```
+
+5. **Stop services**:
+   ```bash
+   docker-compose down
+   ```
+
+6. **Rebuild after code changes**:
+   ```bash
+   docker-compose up -d --build
+   ```
+
+**Note:** Make sure `questions.json` file exists in the project root before starting the containers, as it will be mounted as a volume.
+
+### Infrastructure Configuration Files
+
+The following configuration files are used for production deployment but are excluded from git (see `.gitignore`):
+
+- **Nginx configuration** (`nginx-mongodb.conf` or similar): Used for TCP proxying to MongoDB (if needed)
+- **HAProxy configuration** (`haproxy-mongodb.cfg` or similar): Alternative to nginx for MongoDB TCP proxying
+
+These files should be created on the production server as needed. See the deployment script section for details.
+
+### Automated Deployment Script
+
+For easy deployment to a remote server, use the provided `deploy.sh` script:
+
+1. **Configure the script** (if needed):
+   - Edit `deploy.sh` to change `REMOTE_SERVER` and `REMOTE_PATH` if your server configuration differs
+
+2. **Prepare required files**:
+   ```bash
+   # Make sure you have questions.json
+   # Make sure you have .env.prod configured
+   ```
+
+3. **Run the deployment script**:
+   ```bash
+   ./deploy.sh
+   ```
+
+The script will:
+- Sync all project files to the remote server (excluding unnecessary files)
+- Copy `questions.json` to the remote server
+- Copy `.env.prod` to the remote server
+- Copy HAProxy configuration (`haproxy-mongodb.cfg`) if it exists
+- Stop existing containers
+- Build and start new containers with docker-compose
+- Show container status and recent logs
+
+**Prerequisites:**
+- SSH access to the remote server configured (the script uses `english` as the server alias)
+- Docker and docker-compose installed on the remote server
+- `questions.json` file exists locally
+- `.env.prod` file exists locally (or the script will warn you)
 
 ## Usage
 
@@ -184,9 +286,11 @@ To update the list of questions in `questions.json`:
 
 1. **Using the provided script** (recommended):
    ```bash
-   python3 generate_questions.py
+   go run cmd/generate-questions/main.go
    ```
    This script parses `questions_text.txt` and generates `questions.json` with all questions.
+   
+   **Note:** The `generate-questions` binary is excluded from git (see `.gitignore`). Always use `go run` to execute the script.
 
 2. **Manually editing**:
    - Edit `questions.json` directly
@@ -228,7 +332,14 @@ tg-english-bot/
 │   └── excel_handler.go # Excel file generation
 ├── questions.json       # Questions file (JSON format)
 ├── questions_text.txt   # Source questions text
-├── generate_questions.py # Script to generate questions.json
+├── cmd/
+│   └── generate-questions/
+│       └── main.go      # Script to generate questions.json
+├── docker-compose.yml   # Docker Compose configuration for production
+├── Dockerfile           # Docker image definition
+├── deploy.sh           # Deployment script for remote server
+├── haproxy-mongodb.cfg # HAProxy config for MongoDB (not in git)
+├── nginx-mongodb.conf  # Nginx config for MongoDB (not in git)
 ├── go.mod
 └── README.md
 ```
